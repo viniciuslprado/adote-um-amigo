@@ -1,0 +1,1 @@
+-- O projeto usa MongoDB. Este arquivo fica reservado para inicializacoes SQL caso o banco mude no futuro.

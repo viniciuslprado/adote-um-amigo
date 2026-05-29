@@ -1,41 +1,25 @@
 {
-  "name": "adoption-app",
+  "name": "adote-um-amigo",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "@testing-library/dom": "^10.4.1",
-    "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.2",
-    "@testing-library/user-event": "^13.5.0",
-    "axios": "^1.15.0",
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5",
-    "react-router-dom": "^7.14.0",
-    "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
-  },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "dev": "docker compose up --build",
+    "start": "npm run dev",
+    "install:backend": "npm --prefix backend install",
+    "install:frontend": "npm --prefix frontend install",
+    "start:frontend": "npm --prefix frontend start",
+    "build:frontend": "npm --prefix frontend run build",
+    "test:frontend": "npm --prefix frontend test",
+    "frontend:install": "npm --prefix frontend install",
+    "frontend:start": "npm --prefix frontend start",
+    "frontend:build": "npm --prefix frontend run build",
+    "frontend:test": "npm --prefix frontend test",
+    "backend:up": "docker compose up --build",
+    "backend:down": "docker compose down",
+    "backend:logs": "docker compose logs -f",
+    "backend:seed": "docker compose exec backend npm run seed",
+    "load:animals": "docker compose --profile load-test run --rm k6 run /scripts/animals-list.js",
+    "load:adoption": "docker compose --profile load-test run --rm k6 run /scripts/adoption-flow.js",
+    "load:test": "npm run load:animals"
   }
 }

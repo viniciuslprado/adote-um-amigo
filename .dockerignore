@@ -1,0 +1,7 @@
+.git
+frontend/node_modules
+frontend/build
+backend/node_modules
+node_modules
+docs
+load-tests
