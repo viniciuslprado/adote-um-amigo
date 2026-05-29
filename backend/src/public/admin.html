@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Painel Admin - Adote um Amigo</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f4f6f8;
+        color: #18212f;
+      }
+
+      main {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 28px;
+      }
+
+      h1,
+      h2 {
+        margin: 0 0 16px;
+      }
+
+      section {
+        background: #fff;
+        border: 1px solid #d8dee6;
+        border-radius: 8px;
+        margin-bottom: 18px;
+        padding: 18px;
+      }
+
+      form {
+        display: grid;
+        gap: 12px;
+      }
+
+      label {
+        display: grid;
+        gap: 6px;
+        font-weight: 700;
+      }
+
+      input,
+      textarea,
+      button {
+        border: 1px solid #b9c2cf;
+        border-radius: 6px;
+        font: inherit;
+        padding: 10px;
+      }
+
+      textarea {
+        min-height: 90px;
+        resize: vertical;
+      }
+
+      button {
+        background: #0866ff;
+        border-color: #0866ff;
+        color: #fff;
+        cursor: pointer;
+        font-weight: 700;
+      }
+
+      button:disabled {
+        cursor: not-allowed;
+        opacity: 0.65;
+      }
+
+      button.secondary {
+        background: #fff;
+        color: #18212f;
+      }
+
+      button.danger {
+        background: #c62828;
+        border-color: #c62828;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      [hidden] {
+        display: none !important;
+      }
+
+      .row {
+        align-items: center;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+
+      .message {
+        margin-top: 12px;
+        font-weight: 700;
+        min-height: 20px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 14px;
+      }
+
+      .card {
+        border: 1px solid #d8dee6;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #fff;
+      }
+
+      .card img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        background: #eef2f6;
+      }
+
+      .card-body {
+        padding: 12px;
+      }
+
+      .card-body p {
+        margin: 6px 0;
+      }
+
+      .admin-layout {
+        align-items: start;
+        display: grid;
+        gap: 18px;
+        grid-template-columns: minmax(280px, 380px) 1fr;
+      }
+
+      .card-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .card-actions button {
+        flex: 1;
+      }
+
+      .success {
+        color: #176b35;
+      }
+
+      .error {
+        color: #b42318;
+      }
+
+      .empty-state {
+        background: #f8fafc;
+        border: 1px dashed #9aa7b7;
+        border-radius: 8px;
+        color: #526071;
+        padding: 18px;
+      }
+
+      @media (max-width: 860px) {
+        main {
+          padding: 16px;
+        }
+
+        .admin-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .row {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .row button,
+        form button,
+        .modal-actions button {
+          width: 100%;
+        }
+
+        .modal-actions {
+          flex-direction: column-reverse;
+        }
+      }
+
+      .drop-zone {
+        align-items: center;
+        background: #f8fafc;
+        border: 2px dashed #9aa7b7;
+        border-radius: 8px;
+        cursor: pointer;
+        display: grid;
+        gap: 8px;
+        justify-items: center;
+        min-height: 130px;
+        padding: 16px;
+        text-align: center;
+      }
+
+      .drop-zone.dragover {
+        background: #eaf2ff;
+        border-color: #0866ff;
+      }
+
+      .drop-zone input {
+        display: none;
+      }
+
+      .image-preview {
+        border-radius: 8px;
+        display: none;
+        max-height: 160px;
+        max-width: 100%;
+        object-fit: cover;
+      }
+
+      .modal-backdrop {
+        align-items: center;
+        background: rgba(15, 23, 42, 0.55);
+        display: none;
+        inset: 0;
+        justify-content: center;
+        padding: 20px;
+        position: fixed;
+        z-index: 20;
+      }
+
+      .modal-backdrop.open {
+        display: flex;
+      }
+
+      .modal-card {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 18px 60px rgba(15, 23, 42, 0.28);
+        max-width: 420px;
+        padding: 22px;
+        width: 100%;
+      }
+
+      .modal-card p {
+        color: #526071;
+        line-height: 1.5;
+      }
+
+      .modal-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Painel do Administrador</h1>
+
+      <section id="login-section">
+        <h2>Login</h2>
+        <form id="login-form">
+          <label>
+            Usuario
+            <input id="username" autocomplete="username" value="admin" required />
+          </label>
+
+          <label>
+            Senha
+            <input id="password" type="password" autocomplete="current-password" value="admin123" required />
+          </label>
+
+          <button type="submit">Entrar</button>
+        </form>
+        <p id="login-message" class="message"></p>
+      </section>
+
+      <div id="admin-section" class="admin-layout hidden" hidden>
+        <section>
+          <div class="row">
+            <h2 id="form-title">Cadastro de animais</h2>
+            <button id="logout-button" class="secondary" type="button">Sair</button>
+          </div>
+
+          <form id="animal-form">
+            <label>
+              Nome
+              <input id="animal-name" required />
+            </label>
+
+            <label>
+              Especie
+              <input id="animal-type" placeholder="Cachorro, Gato, Coelho..." required />
+            </label>
+
+            <label>
+              Idade
+              <input id="animal-age" placeholder="Ex.: 2 anos" />
+            </label>
+
+            <label>
+              Descricao
+              <textarea id="animal-description" required></textarea>
+            </label>
+
+            <label>
+              Imagem
+              <div id="image-drop-zone" class="drop-zone">
+                <input id="animal-image" type="file" accept="image/*" />
+                <img id="image-preview" class="image-preview" alt="Previa da imagem selecionada" />
+                <span id="image-help">Clique para selecionar ou arraste uma imagem aqui</span>
+              </div>
+            </label>
+
+            <button id="save-animal-button" type="submit">Cadastrar</button>
+            <button id="cancel-edit-button" class="secondary hidden" type="button">Cancelar edicao</button>
+          </form>
+          <p id="animal-message" class="message"></p>
+        </section>
+
+        <section id="list-section">
+        <div class="row">
+          <h2>Animais cadastrados no MongoDB</h2>
+          <button id="refresh-button" class="secondary" type="button">Atualizar lista</button>
+        </div>
+        <div id="animals-list" class="grid"></div>
+        </section>
+      </div>
+    </main>
+
+    <div id="delete-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="delete-title">
+      <div class="modal-card">
+        <h2 id="delete-title">Remover animal?</h2>
+        <p id="delete-message">Esta acao remove o animal da listagem do banco.</p>
+        <div class="modal-actions">
+          <button id="cancel-delete-button" class="secondary" type="button">Cancelar</button>
+          <button id="confirm-delete-button" class="danger" type="button">Remover</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="/admin.js" defer></script>
+  </body>
+</html>
