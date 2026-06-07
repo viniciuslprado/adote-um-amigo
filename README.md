@@ -149,7 +149,7 @@ Esta secao apresenta os principais fluxos e ferramentas do projeto em funcioname
 
 ### Organizacao e requisitos
 
-![Diagrama de requisitos de software](prints/Requisitosdesoftware.jpg)
+![Diagrama de requisitos de software](prints/Requisitosdesoftware2.jpg)
 
 O diagrama resume os requisitos e etapas principais do projeto: criacao da aplicacao React, desenvolvimento da interface, consumo das APIs externas de caes e gatos, formulario de cadastro de interesse e publicacao da aplicacao.
 
@@ -171,7 +171,7 @@ Esta parte da pagina inicial destaca os recursos oferecidos ao usuario, como per
 
 A secao final da pagina inicial apresenta orientacoes resumidas sobre adocao responsavel, incluindo planejamento, saude, bem-estar e adaptacao do animal ao novo lar.
 
-![Lista publica de animais](prints/print-lista-animais.png)
+![Lista publica de animais](prints/print17.png)
 
 A listagem publica exibe os animais disponiveis para adocao. Nela o usuario pode buscar por texto, filtrar por especie e cidade, ordenar os resultados e acessar os cards individuais dos animais.
 
