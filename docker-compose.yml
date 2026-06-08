@@ -23,10 +23,10 @@ services:
       RATE_LIMIT_MAX: ${RATE_LIMIT_MAX:-5000}
       ADMIN_NAME: ${ADMIN_NAME:-Administrador}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@adote.local}
-      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-Admin@123}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}
       FRONTEND_URL: http://localhost:3000
-      DOG_API_KEY: ${REACT_APP_DOG_API_KEY:-}
-      CAT_API_KEY: ${REACT_APP_CAT_API_KEY:-}
+      REACT_APP_DOG_API_KEY: ${REACT_APP_DOG_API_KEY:-}
+      REACT_APP_CAT_API_KEY: ${REACT_APP_CAT_API_KEY:-}
     ports:
       - "4000:4000"
     depends_on:

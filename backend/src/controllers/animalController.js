@@ -140,17 +140,30 @@ function matchesExternalFilters(animal, query) {
 async function getExternalAnimals(limit) {
   const results = await Promise.allSettled([
     axios.get("https://api.thedogapi.com/v1/breeds", {
-      headers: { "x-api-key": process.env.DOG_API_KEY },
+      headers: { "x-api-key": process.env.REACT_APP_DOG_API_KEY },
     }),
     axios.get("https://api.thecatapi.com/v1/breeds", {
-      headers: { "x-api-key": process.env.CAT_API_KEY },
+      headers: { "x-api-key": process.env.REACT_APP_CAT_API_KEY },
     }),
   ]);
 
-  const dogs =
-    results[0].status === "fulfilled"
-      ? results[0].value.data.slice(0, limit).map(formatDog)
-      : [];
+  let dogImages = [];
+  try {
+    const imagesRes = await axios.get(`https://dog.ceo/api/breeds/image/random/${limit}`);
+    dogImages = imagesRes.data.message;
+  } catch (e) {
+    console.warn("Falha ao buscar imagens de fallback para caes.");
+  }
+
+  const rawDogs = results[0].status === "fulfilled" ? results[0].value.data.slice(0, limit) : [];
+  const dogs = rawDogs.map((dog, index) => {
+    const formattedDog = formatDog(dog);
+    if (formattedDog.image === fallbackAnimalImage && dogImages[index]) {
+      formattedDog.image = dogImages[index];
+    }
+    return formattedDog;
+  });
+
   const cats =
     results[1].status === "fulfilled"
       ? results[1].value.data
@@ -227,14 +240,26 @@ async function listDatabaseAnimals(req, res) {
 }
 
 async function importDogs(req, res) {
+  const limit = Number(req.query.limit) || 6;
   const response = await axios.get("https://api.thedogapi.com/v1/breeds", {
-    headers: { "x-api-key": process.env.DOG_API_KEY },
+    headers: { "x-api-key": process.env.REACT_APP_DOG_API_KEY },
   });
 
-  const dogs = response.data.slice(0, Number(req.query.limit) || 6);
+  const dogs = response.data.slice(0, limit);
+  let dogImages = [];
+  try {
+    const imagesRes = await axios.get(`https://dog.ceo/api/breeds/image/random/${limit}`);
+    dogImages = imagesRes.data.message;
+  } catch (e) {
+    console.warn("Falha ao buscar imagens de fallback para caes na importacao.");
+  }
+
   const saved = [];
 
-  for (const dog of dogs) {
+  for (let i = 0; i < dogs.length; i++) {
+    const dog = dogs[i];
+    const image = dog.image?.url || dogImages[i] || fallbackAnimalImage;
+
     const animal = await Animal.findOneAndUpdate(
       { externalSource: "dog-api", externalId: String(dog.id) },
       {
@@ -242,7 +267,7 @@ async function importDogs(req, res) {
         type: "Cachorro",
         age: "Nao informado",
         location: "Abrigo parceiro",
-        image: dog.image?.url || fallbackAnimalImage,
+        image: image,
         description: dog.temperament || "Sem descricao disponivel.",
         origin: dog.origin || "Origem nao informada",
         active: true,
@@ -261,7 +286,7 @@ async function importDogs(req, res) {
 
 async function importCats(req, res) {
   const response = await axios.get("https://api.thecatapi.com/v1/breeds", {
-    headers: { "x-api-key": process.env.CAT_API_KEY },
+    headers: { "x-api-key": process.env.REACT_APP_CAT_API_KEY },
   });
 
   const cats = response.data.filter((cat) => cat.image?.url).slice(0, Number(req.query.limit) || 6);

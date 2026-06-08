@@ -204,6 +204,7 @@ function startEditAnimal(animalId) {
   document.querySelector("#animal-name").value = animal.name || "";
   document.querySelector("#animal-type").value = animal.type || "";
   document.querySelector("#animal-age").value = animal.age || "";
+  document.querySelector("#animal-location").value = animal.location || "";
   document.querySelector("#animal-description").value = animal.description || "";
   setSelectedImage(editingAnimalImage);
   formTitle.textContent = `Editando: ${animal.name}`;
@@ -339,7 +340,7 @@ animalForm.addEventListener("submit", async (event) => {
         type: document.querySelector("#animal-type").value,
         age: document.querySelector("#animal-age").value || "Nao informado",
         description: document.querySelector("#animal-description").value,
-        location: "Cadastro via painel admin",
+        location: document.querySelector("#animal-location").value,
         image: selectedImage || editingAnimalImage || fallbackImage,
         origin: "Painel admin",
         status: "available",

@@ -1,0 +1,158 @@
+# ROTEIRO DE APRESENTAÇÃO E COMANDOS AO VIVO
+
+## LINKS E COMANDOS
+
+**Comandos principais (Terminal na pasta do projeto):**
+- Subir a aplicação (Docker): `docker compose up -d --build` (ou `npm run dev`)
+- Parar a aplicação: `docker compose down`
+- Rodar o teste de carga: `npm run load:animals`
+- Ver os containers rodando: `docker compose ps`
+
+**Links (Navegador e Apps):**
+- Site público (Frontend): http://localhost:3000
+- Painel Admin (Backend): http://localhost:4000/admin  *(Login: `admin` / Senha: `admin123`)*
+- Documentação da API (Swagger): http://localhost:4000/api-docs
+- Painel de Métricas (Grafana): http://localhost:3001  *(Login: `admin` / Senha: `admin`)*
+- Monitoramento (Prometheus): http://localhost:9090
+- MongoDB Compass: `mongodb://127.0.0.1:27018/adote-um-amigo?directConnection=true`
+---
+
+## Slide 4 - Containerização com Docker (Aluno 2)
+> O que mostrar: Docker Desktop ou os containers rodando no terminal.
+1. Mostre a tela do Docker Desktop com os containers para a turma.
+2. No terminal, suba toda a aplicação com apenas um comando:
+   COMANDO: docker compose up -d --build
+   (Dica: se quiser mostrar os logs subindo ao vivo na tela, rode: npm run dev)
+3. Mostre a lista de containers ativos através do terminal:
+   COMANDO: docker compose ps
+
+> 💡 LINKS DESTE SLIDE:
+> - Site público (Frontend): http://localhost:3000
+> - Painel Admin (Backend): http://localhost:4000/admin  *(Login: `admin` / Senha: `admin123`)*
+
+---
+
+## Slide 5 - Banco de Dados (Aluno 2)
+> O que mostrar: MongoDB Compass (Opcional, mas muito recomendado).
+1. Abra o MongoDB Compass.
+2. Conecte-se usando a URL:
+   URL: mongodb://127.0.0.1:27018/adote-um-amigo?directConnection=true
+3. Mostre o banco `adote-um-amigo` e as coleções `animals`, `users`, e `adoptionrequests`. Mostre a estrutura de um animal salvo lá.
+
+---
+
+## Slide 7 - Demonstração da API (Aluno 3)
+> O que mostrar: A aplicação e a API rodando.
+1. Abra o navegador e mostre o frontend público:
+   URL: http://localhost:3000
+2. Navegue pelos animais disponíveis e clique para ver os detalhes.
+3. Em seguida, acesse o Painel Admin do Backend:
+   URL: http://localhost:4000/admin
+   Usuário: admin
+   Senha: admin123
+4. Mostre a criação, edição ou exclusão de um animal direto pelo painel.
+
+> 🎤 ROTEIRO DE FALA (Slide 7):
+> - Vamos mostrar a API em ação. Frontend rodando na porta 3000, consumindo rotas públicas.
+> - Tela principal: fazemos um GET para listar animais (mesclando banco local com APIs externas).
+> - Painel Administrativo: demonstramos o CRUD completo na prática.
+> - Ações no painel (Adicionar, Editar, Excluir) fazem chamadas diretas ao backend (POST, PUT, DELETE).
+> - Alterações refletem em tempo real no site público.
+
+---
+
+## Slide 8 - Segurança (Aluno 4)
+> O que mostrar: Bloqueio de rotas protegidas e acesso com token.
+> Dica: Faça isso pelo Swagger!
+1. Acesse o Swagger:
+   URL: http://localhost:4000/api-docs
+2. Tente usar a rota restrita `GET /api/animals/admin/list` clicando em "Try it out" e depois "Execute" SEM estar logado. Mostre que o servidor retorna "Erro 401 (Unauthorized)".
+3. Vá na rota `POST /api/auth/login` e clique em "Try it out". O usuário e senha já virão preenchidos no corpo (`admin` / `admin123`). Clique em "Execute".
+4. Copie o texto do "token" gerado na caixa de resposta.
+5. Suba até o topo da página do Swagger, clique no botão "Authorize" (cadeado), cole o token, clique em Authorize e depois feche.
+6. Tente rodar a rota restrita `GET /api/animals/admin/list` novamente. Mostre que agora ela funciona e retorna "200 OK" com a lista completa dos animais.
+
+> 🎤 ROTEIRO DE FALA (Slide 8 - JWT):
+> - A segurança da nossa API é garantida via JWT (JSON Web Token).
+> - Ao fazer o login com credenciais válidas, o backend devolve esse Token.
+> - O Token funciona como um "crachá" contendo o perfil de acesso (ex: admin).
+> - Nas rotas protegidas, se acessarmos sem o Token, a API bloqueia com Erro 401.
+> - Mas, ao injetar o Token no cabeçalho da requisição (Bearer Auth), ganhamos acesso total.
+---
+
+## Slide 9 - Testes (Aluno 4)
+> O que mostrar: Testes de carga rodando com k6 via microserviço.
+1. Abra um NOVO terminal (mantendo o projeto rodando no outro).
+2. Execute o comando que cria um container exclusivo do k6 para martelar a sua API:
+   COMANDO: npm run load:animals
+3. Acompanhe a execução e mostre os resultados na tela (taxa de requisições, tempo de resposta/latência e usuários virtuais - VUs).
+
+> 🎤 ROTEIRO DE FALA (Slide 9):
+> - Garantimos o limite da API rodando testes de carga automatizados com o k6.
+> - Criamos um microserviço exclusivo para disparar essas requisições.
+> - Neste momento, o k6 simula dezenas de usuários virtuais acessando a API simultaneamente.
+> - Objetivo: testar o limite do sistema, medir o tempo de resposta e ver se ocorrem falhas.
+> - Isso valida a saúde da nossa API sob cenário de estresse real.
+
+---
+
+## Slide 10 - Observabilidade (Aluno 5)
+> O que mostrar: Prometheus e Grafana rodando ao vivo (Obrigatório).
+1. Abra o Prometheus no navegador (para provar a coleta):
+   URL: http://localhost:9090
+   Dica: busque por `adote_um_amigo_http_requests_total` e clique em Execute.
+2. Abra o Grafana no navegador:
+   URL: http://localhost:3001
+   Usuário: admin
+   Senha: admin
+3. Abra os Dashboards e mostre em tempo real as métricas reagindo ao teste de carga que vocês acabaram de fazer (Volume de HTTP, tempo de resposta p95 e status do Mongo).
+
+> 🎤 ROTEIRO DE FALA (Slide 10):
+> - Para acompanhar os testes de carga, precisamos de Observabilidade.
+> - Backend expõe métricas nativas varridas pelo Prometheus e enviadas ao Grafana.
+> - No dashboard: acompanhamos em tempo real os reflexos do teste de carga.
+> - Gráficos mostram: aumento de requisições HTTP e latência (tempo de resposta).
+> - Monitoramos também a conexão com o MongoDB para garantir estabilidade e que não há queda no banco.
+
+---
+
+## Slide 11 - Deploy (Aluno 5)
+> O que mostrar: Tudo rodando integrado localmente.
+1. Explique que o ambiente simulou o deploy usando Docker Compose.
+2. Relembre que o Site (http://localhost:3000), a API e Swagger (http://localhost:4000/api-docs) e o Grafana (http://localhost:3001) subiram perfeitamente juntos em containers independentes.
+
+> 🎤 ROTEIRO DE FALA (Slide 11):
+> - Deploy 100% conteinerizado: simulamos um ambiente de nuvem localmente.
+> - Toda a stack (Frontend, Backend, MongoDB, Prometheus, Grafana e k6) foi orquestrada com o Docker Compose.
+> - Vantagem dessa abordagem: "Deploy contínuo e universal".
+> - Garantia de que a aplicação vai rodar com exatamente o mesmo comportamento em qualquer máquina ou servidor de produção.
+
+---
+
+## Slide 12 - Documentação da API (Aluno 5)
+> O que mostrar: Swagger aberto (Obrigatório).
+1. Volte para o Swagger:
+   URL: http://localhost:4000/api-docs
+2. Mostre para o professor como as rotas estão bem descritas.
+3. Teste a rota pública `GET /api/animals` no botão "Try it out" e mostre a resposta em JSON, evidenciando que documentação e código estão vivos e conectados.
+
+> 🎤 ROTEIRO DE FALA (Slide 12):
+> - Para facilitar a interação com o backend, documentamos toda a API via Swagger.
+> - O Swagger é interativo, definindo o verdadeiro 'contrato' da nossa aplicação.
+> - Ele lista as rotas que exigem Token JWT, métodos aceitos e o formato exato da resposta.
+> - O grande benefício: podemos testar rotas em tempo real direto na tela, sem escrever código adicional.
+
+---
+
+## Slide 13 - Conclusão (Todos)
+
+> 🎤 ROTEIRO DE FALA (Slide 13):
+> - Conclusão: a disciplina nos trouxe um grande aprendizado sobre a construção de um ecossistema completo de software.
+> - Pontos fortes: arquitetura com responsabilidades separadas, API 100% documentada e containers isolando as ferramentas (evitou bugs de ambiente).
+> - Melhorias futuras (1): Realizar o deploy da stack inteira na nuvem pública (AWS, Render, etc).
+> - Melhorias futuras (2): Quebrar o backend atual em verdadeiros microsserviços literais (ex: um exclusivo para Adoções e outro só para Autenticação).
+
+---
+
+## 📌 COMANDOS EXTRAS (Fora dos Slides)
+- Parar a aplicação após a apresentação: `docker compose down`

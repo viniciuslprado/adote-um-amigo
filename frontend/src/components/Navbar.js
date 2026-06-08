@@ -4,14 +4,14 @@ function Navbar() {
   return (
     <header className="navbar">
       <div className="navbar-content">
-        <Link to="/" className="logo-link">
+        <Link to="/inicio" className="logo-link">
           <h2>Adote um Amigo</h2>
         </Link>
 
         <nav>
           <ul className="nav-links">
             <li>
-              <Link to="/">Início</Link>
+              <Link to="/inicio">Início</Link>
             </li>
             <li>
               <Link to="/animals">Animais</Link>
